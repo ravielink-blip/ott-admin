@@ -1,0 +1,844 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!doctype html>\
+<html lang="en">\
+<head>\
+  <meta charset="utf-8" />\
+  <title>OTT Admin Panel</title>\
+  <meta name="viewport" content="width=device-width, initial-scale=1" />\
+  <style>\
+    /* ================================\
+       SIMPLE, LIGHTWEIGHT STYLES\
+       ================================ */\
+    :root \{\
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;\
+      background-color: #050505;\
+      color: #f5f5f5;\
+    \}\
+    body \{\
+      margin: 0;\
+      padding: 1rem;\
+    \}\
+    h1 \{\
+      margin-bottom: 1rem;\
+      font-size: 1.5rem;\
+    \}\
+    h2 \{\
+      margin-top: 2rem;\
+      font-size: 1.25rem;\
+      border-bottom: 1px solid #333;\
+      padding-bottom: .25rem;\
+    \}\
+    section \{\
+      margin-bottom: 2rem;\
+      border: 1px solid #222;\
+      padding: 1rem;\
+      border-radius: .5rem;\
+      background: #101010;\
+    \}\
+    .form-row \{\
+      display: flex;\
+      flex-wrap: wrap;\
+      gap: .5rem;\
+      margin-bottom: 1rem;\
+    \}\
+    input, textarea, select, button \{\
+      font: inherit;\
+    \}\
+    input, textarea, select \{\
+      padding: .4rem .5rem;\
+      border-radius: .25rem;\
+      border: 1px solid #333;\
+      background: #181818;\
+      color: #f5f5f5;\
+      min-width: 0;\
+    \}\
+    textarea \{\
+      min-height: 60px;\
+      resize: vertical;\
+    \}\
+    button \{\
+      padding: .4rem .7rem;\
+      border-radius: .25rem;\
+      border: 1px solid #444;\
+      background: #2f80ed;\
+      color: #fff;\
+      cursor: pointer;\
+    \}\
+    button.secondary \{\
+      background: #444;\
+    \}\
+    button.danger \{\
+      background: #b00020;\
+    \}\
+    button:disabled \{\
+      opacity: .5;\
+      cursor: default;\
+    \}\
+    .small \{\
+      font-size: .85rem;\
+      opacity: .8;\
+    \}\
+    table \{\
+      width: 100%;\
+      border-collapse: collapse;\
+      margin-top: .5rem;\
+      font-size: .9rem;\
+    \}\
+    th, td \{\
+      border: 1px solid #333;\
+      padding: .4rem;\
+      vertical-align: top;\
+    \}\
+    th \{\
+      background: #181818;\
+    \}\
+    img.thumb \{\
+      max-width: 80px;\
+      max-height: 80px;\
+      object-fit: cover;\
+      display: block;\
+    \}\
+    .pill \{\
+      display: inline-block;\
+      padding: 0 .4rem;\
+      border-radius: 999px;\
+      border: 1px solid #555;\
+      font-size: .75rem;\
+      margin-right: .25rem;\
+    \}\
+    @media (max-width: 768px) \{\
+      .form-row \{\
+        flex-direction: column;\
+      \}\
+      table \{\
+        font-size: .8rem;\
+      \}\
+    \}\
+    .status \{\
+      margin-bottom: .5rem;\
+      font-size: .85rem;\
+      color: #a5d6a7;\
+    \}\
+    .status.error \{\
+      color: #ef9a9a;\
+    \}\
+  </style>\
+</head>\
+<body>\
+  <h1>OTT Admin Panel</h1>\
+  <div id="status" class="status"></div>\
+\
+  <!-- ====================================\
+       SECTION 1 \'96 TABLE 1: CATEGORIES\
+       ==================================== -->\
+  <section id="section-categories">\
+    <h2>Section 1 \'96 Movie Categories (Table 1)</h2>\
+\
+    <!-- 1a. Add Category -->\
+    <div class="form-row">\
+      <input id="cat-name-input" type="text" placeholder="New Category Name" />\
+      <button id="cat-add-btn">Add Category</button>\
+    </div>\
+\
+    <!-- 1b. Category List -->\
+    <div class="small">Existing Categories:</div>\
+    <table>\
+      <thead>\
+        <tr>\
+          <th>ID</th>\
+          <th>Category</th>\
+          <th>Actions</th>\
+        </tr>\
+      </thead>\
+      <tbody id="cat-list-body"></tbody>\
+    </table>\
+  </section>\
+\
+  <!-- ====================================\
+       SECTION 2 \'96 TABLE 2: VIDEOS\
+       ==================================== -->\
+  <section id="section-videos">\
+    <h2>Section 2 \'96 Video Data (Table 2)</h2>\
+\
+    <!-- 2a. Add Data -->\
+    <div class="form-row">\
+      <input id="video-url-input" type="text" placeholder="Video URL" />\
+      <input id="image-url-input" type="text" placeholder="Image URL" />\
+      <input id="video-title-input" type="text" placeholder="Title" />\
+      <input id="video-ann-input" type="text" placeholder="Announcement (optional)" />\
+    </div>\
+    <div class="form-row">\
+      <textarea id="video-desc-input" placeholder="Description"></textarea>\
+    </div>\
+    <div class="form-row">\
+      <select id="video-cat-select">\
+        <option value="">Select Category</option>\
+      </select>\
+      <input id="price-usa-input" type="number" step="0.01" placeholder="Price USA" />\
+      <input id="price-ca-input" type="number" step="0.01" placeholder="Price CA" />\
+      <input id="price-uk-input" type="number" step="0.01" placeholder="Price UK" />\
+      <input id="price-eu-input" type="number" step="0.01" placeholder="Price EU" />\
+      <input id="price-aus-input" type="number" step="0.01" placeholder="Price AUS" />\
+      <button id="video-add-btn">Add Video</button>\
+    </div>\
+    <div class="small">\
+      Note: Click & Like counters will be updated from the user-facing front-end (not here).\
+    </div>\
+\
+    <!-- 2b. Data List -->\
+    <table>\
+      <thead>\
+        <tr>\
+          <th>ID</th>\
+          <th>Thumbnail</th>\
+          <th>Title / URLs</th>\
+          <th>Category</th>\
+          <th>Pricing</th>\
+          <th>Counters</th>\
+          <th>Timestamps</th>\
+          <th>Actions</th>\
+        </tr>\
+      </thead>\
+      <tbody id="video-list-body"></tbody>\
+    </table>\
+  </section>\
+\
+  <!-- ====================================\
+       SECTION 3 \'96 TABLE 3: SITE IMAGES\
+       ==================================== -->\
+  <section id="section-images">\
+    <h2>Section 3 \'96 Site Logo & Web Arts (Table 3)</h2>\
+\
+    <!-- 3a. Add Images -->\
+    <div class="form-row">\
+      <input id="img-url-input" type="text" placeholder="Image URL" />\
+      <input id="img-desc-input" type="text" placeholder="Image Description" />\
+      <button id="img-add-btn">Add Image</button>\
+    </div>\
+\
+    <!-- 3b. Image List -->\
+    <table>\
+      <thead>\
+        <tr>\
+          <th>ID</th>\
+          <th>Image</th>\
+          <th>Description / URL</th>\
+          <th>Actions</th>\
+        </tr>\
+      </thead>\
+      <tbody id="img-list-body"></tbody>\
+    </table>\
+  </section>\
+\
+  <!-- ====================================\
+       SECTION 4 \'96 TABLE 4: FOOTNOTES / TEXT\
+       ==================================== -->\
+  <section id="section-footnotes">\
+    <h2>Section 4 \'96 Footnotes & Announcements (Table 4)</h2>\
+\
+    <!-- 4a. Add Text -->\
+    <div class="form-row">\
+      <input id="foot-title-input" type="text" placeholder="Title" />\
+      <input id="foot-desc-input" type="text" placeholder="Description / Text" />\
+      <button id="foot-add-btn">Add Text</button>\
+    </div>\
+\
+    <!-- 4b. Text List -->\
+    <table>\
+      <thead>\
+        <tr>\
+          <th>ID</th>\
+          <th>Title</th>\
+          <th>Description</th>\
+          <th>Actions</th>\
+        </tr>\
+      </thead>\
+      <tbody id="foot-list-body"></tbody>\
+    </table>\
+  </section>\
+\
+  <!-- ====================================\
+       JAVASCRIPT (Supabase + CRUD)\
+       ==================================== -->\
+  <script type="module">\
+    import \{ createClient \} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";\
+\
+    // =====================================\
+    // ===== MANUAL CONFIGURATION (EDIT THIS)\
+    // =====================================\
+    const SUPABASE_URL = "https://hqixjnwdyzzaswxunimi.supabase.co";   // <-- replace\
+    const SUPABASE_KEY = "sb_publishable_AT5jaqyDA2fXnKpgyAm4Yw_q1EUdd6g";         // <-- replace\
+    // ===== END MANUAL CONFIGURATION ======\
+\
+    // ===== DO NOT EDIT BELOW UNLESS NEEDED =====\
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);\
+\
+    const statusEl = document.getElementById("status");\
+\
+    let categoriesCache = [];\
+    let videosCache = [];\
+    let imagesCache = [];\
+    let footnotesCache = [];\
+\
+    function setStatus(msg, isError = false) \{\
+      if (!msg) \{\
+        statusEl.textContent = "";\
+        statusEl.classList.remove("error");\
+        return;\
+      \}\
+      statusEl.textContent = msg;\
+      statusEl.classList.toggle("error", isError);\
+    \}\
+\
+    function toNullIfEmpty(v) \{\
+      if (v === "" || v === undefined || v === null) return null;\
+      return v;\
+    \}\
+\
+    // =====================================\
+    // SECTION 1 \'96 CATEGORIES (Table 1)\
+    // =====================================\
+\
+    async function loadCategories() \{\
+      const \{ data, error \} = await supabase\
+        .from("categories")\
+        .select("*")\
+        .order("id", \{ ascending: true \});\
+\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Error loading categories", true);\
+        return;\
+      \}\
+      categoriesCache = data || [];\
+      renderCategories();\
+      populateCategoryDropdown();\
+    \}\
+\
+    function renderCategories() \{\
+      const tbody = document.getElementById("cat-list-body");\
+      tbody.innerHTML = "";\
+      for (const cat of categoriesCache) \{\
+        const tr = document.createElement("tr");\
+        tr.innerHTML = `\
+          <td>$\{cat.id\}</td>\
+          <td>$\{cat.name\}</td>\
+          <td>\
+            <button class="secondary" onclick="window._editCategory($\{cat.id\})">Edit</button>\
+            <button class="danger" onclick="window._deleteCategory($\{cat.id\})">Delete</button>\
+          </td>\
+        `;\
+        tbody.appendChild(tr);\
+      \}\
+    \}\
+\
+    function populateCategoryDropdown() \{\
+      const select = document.getElementById("video-cat-select");\
+      const currentVal = select.value;\
+      select.innerHTML = '<option value="">Select Category</option>';\
+      for (const cat of categoriesCache) \{\
+        const opt = document.createElement("option");\
+        opt.value = cat.id;\
+        opt.textContent = cat.name;\
+        select.appendChild(opt);\
+      \}\
+      if (currentVal) \{\
+        select.value = currentVal;\
+      \}\
+    \}\
+\
+    async function addCategory() \{\
+      const input = document.getElementById("cat-name-input");\
+      const name = input.value.trim();\
+      if (!name) return;\
+      setStatus("Adding category...");\
+      const \{ error \} = await supabase.from("categories").insert(\{ name \});\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to add category", true);\
+      \} else \{\
+        input.value = "";\
+        setStatus("Category added");\
+        await loadCategories();\
+      \}\
+    \}\
+\
+    async function editCategory(id) \{\
+      const cat = categoriesCache.find(c => c.id === id);\
+      if (!cat) return;\
+      const newName = prompt("Edit category name:", cat.name);\
+      if (newName === null) return; // cancel\
+      const trimmed = newName.trim();\
+      if (!trimmed) return;\
+      setStatus("Updating category...");\
+      const \{ error \} = await supabase\
+        .from("categories")\
+        .update(\{ name: trimmed \})\
+        .eq("id", id);\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to update category", true);\
+      \} else \{\
+        setStatus("Category updated");\
+        await loadCategories();\
+      \}\
+    \}\
+\
+    async function deleteCategory(id) \{\
+      const cat = categoriesCache.find(c => c.id === id);\
+      const label = cat ? cat.name : id;\
+      if (!confirm(`Delete category "$\{label\}"? This cannot be undone.`)) return;\
+      setStatus("Deleting category...");\
+      const \{ error \} = await supabase.from("categories").delete().eq("id", id);\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to delete category", true);\
+      \} else \{\
+        setStatus("Category deleted");\
+        await loadCategories();\
+      \}\
+    \}\
+\
+    // expose for inline onclick\
+    window._editCategory = editCategory;\
+    window._deleteCategory = deleteCategory;\
+\
+    // =====================================\
+    // SECTION 2 \'96 VIDEOS (Table 2)\
+    // =====================================\
+\
+    async function loadVideos() \{\
+      const \{ data, error \} = await supabase\
+        .from("videos")\
+        .select("*, categories(name)")\
+        .order("id", \{ ascending: true \});\
+\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Error loading videos", true);\
+        return;\
+      \}\
+      videosCache = data || [];\
+      renderVideos();\
+    \}\
+\
+    function renderVideos() \{\
+      const tbody = document.getElementById("video-list-body");\
+      tbody.innerHTML = "";\
+      for (const v of videosCache) \{\
+        const categoryName = v.categories ? v.categories.name : "";\
+        const priceLine = [\
+          v.price_usa != null ? `<span class="pill">US: $\{v.price_usa\}</span>` : "",\
+          v.price_ca != null ? `<span class="pill">CA: $\{v.price_ca\}</span>` : "",\
+          v.price_uk != null ? `<span class="pill">UK: $\{v.price_uk\}</span>` : "",\
+          v.price_eu != null ? `<span class="pill">EU: $\{v.price_eu\}</span>` : "",\
+          v.price_aus != null ? `<span class="pill">AUS: $\{v.price_aus\}</span>` : "",\
+        ].join(" ");\
+\
+        const tr = document.createElement("tr");\
+        tr.innerHTML = `\
+          <td>$\{v.id\}</td>\
+          <td>\
+            $\{v.image_url ? `<img src="$\{v.image_url\}" class="thumb" alt="">` : ""\}\
+          </td>\
+          <td>\
+            <strong>$\{v.title || ""\}</strong><br>\
+            <div class="small">Video: $\{v.video_url || ""\}</div>\
+            <div class="small">Image: $\{v.image_url || ""\}</div>\
+            $\{v.announcement ? `<div class="small">Announcement: $\{v.announcement\}</div>` : ""\}\
+            $\{v.description ? `<div class="small">$\{v.description\}</div>` : ""\}\
+          </td>\
+          <td>$\{categoryName || ""\}</td>\
+          <td>$\{priceLine || ""\}</td>\
+          <td>\
+            <div class="small">Clicks: $\{v.click_count ?? 0\}</div>\
+            <div class="small">Likes: $\{v.like_count ?? 0\}</div>\
+          </td>\
+          <td>\
+            <div class="small">URL: $\{v.url_timestamp || ""\}</div>\
+            <div class="small">Edit: $\{v.edit_timestamp || "(none)"\}</div>\
+          </td>\
+          <td>\
+            <button class="secondary" onclick="window._editVideo($\{v.id\})">Edit</button>\
+            <button class="danger" onclick="window._deleteVideo($\{v.id\})">Delete</button>\
+          </td>\
+        `;\
+        tbody.appendChild(tr);\
+      \}\
+    \}\
+\
+    async function addVideo() \{\
+      const videoUrl = document.getElementById("video-url-input").value.trim();\
+      const imageUrl = document.getElementById("image-url-input").value.trim();\
+      const title = document.getElementById("video-title-input").value.trim();\
+      const ann = document.getElementById("video-ann-input").value.trim();\
+      const desc = document.getElementById("video-desc-input").value.trim();\
+      const catId = document.getElementById("video-cat-select").value;\
+      const priceUsa = document.getElementById("price-usa-input").value;\
+      const priceCa = document.getElementById("price-ca-input").value;\
+      const priceUk = document.getElementById("price-uk-input").value;\
+      const priceEu = document.getElementById("price-eu-input").value;\
+      const priceAus = document.getElementById("price-aus-input").value;\
+\
+      if (!videoUrl || !title) \{\
+        alert("Video URL and Title are required");\
+        return;\
+      \}\
+\
+      setStatus("Adding video...");\
+\
+      const payload = \{\
+        video_url: videoUrl,\
+        image_url: toNullIfEmpty(imageUrl),\
+        title,\
+        description: toNullIfEmpty(desc),\
+        announcement: toNullIfEmpty(ann),\
+        category_id: catId ? Number(catId) : null,\
+        price_usa: toNullIfEmpty(priceUsa ? Number(priceUsa) : null),\
+        price_ca: toNullIfEmpty(priceCa ? Number(priceCa) : null),\
+        price_uk: toNullIfEmpty(priceUk ? Number(priceUk) : null),\
+        price_eu: toNullIfEmpty(priceEu ? Number(priceEu) : null),\
+        price_aus: toNullIfEmpty(priceAus ? Number(priceAus) : null),\
+      \};\
+\
+      const \{ error \} = await supabase.from("videos").insert(payload);\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to add video", true);\
+      \} else \{\
+        // Clear inputs\
+        document.getElementById("video-url-input").value = "";\
+        document.getElementById("image-url-input").value = "";\
+        document.getElementById("video-title-input").value = "";\
+        document.getElementById("video-ann-input").value = "";\
+        document.getElementById("video-desc-input").value = "";\
+        document.getElementById("video-cat-select").value = "";\
+        document.getElementById("price-usa-input").value = "";\
+        document.getElementById("price-ca-input").value = "";\
+        document.getElementById("price-uk-input").value = "";\
+        document.getElementById("price-eu-input").value = "";\
+        document.getElementById("price-aus-input").value = "";\
+        setStatus("Video added");\
+        await loadVideos();\
+      \}\
+    \}\
+\
+    async function editVideo(id) \{\
+      const v = videosCache.find(x => x.id === id);\
+      if (!v) return;\
+\
+      // Simple prompt-based editing to keep code small & lightweight\
+      const newVideoUrl = prompt("Video URL:", v.video_url ?? "");\
+      if (newVideoUrl === null) return;\
+\
+      const newImageUrl = prompt("Image URL:", v.image_url ?? "");\
+      if (newImageUrl === null) return;\
+\
+      const newTitle = prompt("Title:", v.title ?? "");\
+      if (newTitle === null) return;\
+\
+      const newAnn = prompt("Announcement (optional):", v.announcement ?? "");\
+      if (newAnn === null) return;\
+\
+      const newDesc = prompt("Description:", v.description ?? "");\
+      if (newDesc === null) return;\
+\
+      // Category: show categories list in a simple way\
+      const currentCat = v.category_id || "";\
+      const catNames = categoriesCache.map(c => `$\{c.id\}:$\{c.name\}`).join(", ");\
+      const newCatStr = prompt(\
+        `Category ID (current: $\{currentCat || "none"\}). Options: $\{catNames\}`,\
+        currentCat || ""\
+      );\
+      if (newCatStr === null) return;\
+      const newCatId = newCatStr.trim() ? Number(newCatStr.trim()) : null;\
+\
+      const priceUsa = prompt("Price USA:", v.price_usa ?? "");\
+      if (priceUsa === null) return;\
+      const priceCa = prompt("Price CA:", v.price_ca ?? "");\
+      if (priceCa === null) return;\
+      const priceUk = prompt("Price UK:", v.price_uk ?? "");\
+      if (priceUk === null) return;\
+      const priceEu = prompt("Price EU:", v.price_eu ?? "");\
+      if (priceEu === null) return;\
+      const priceAus = prompt("Price AUS:", v.price_aus ?? "");\
+      if (priceAus === null) return;\
+\
+      const payload = \{\
+        video_url: newVideoUrl.trim(),\
+        image_url: toNullIfEmpty(newImageUrl.trim()),\
+        title: newTitle.trim(),\
+        description: toNullIfEmpty(newDesc.trim()),\
+        announcement: toNullIfEmpty(newAnn.trim()),\
+        category_id: newCatId,\
+        price_usa: toNullIfEmpty(priceUsa.trim() ? Number(priceUsa.trim()) : null),\
+        price_ca: toNullIfEmpty(priceCa.trim() ? Number(priceCa.trim()) : null),\
+        price_uk: toNullIfEmpty(priceUk.trim() ? Number(priceUk.trim()) : null),\
+        price_eu: toNullIfEmpty(priceEu.trim() ? Number(priceEu.trim()) : null),\
+        price_aus: toNullIfEmpty(priceAus.trim() ? Number(priceAus.trim()) : null),\
+      \};\
+\
+      setStatus("Updating video...");\
+      const \{ error \} = await supabase.from("videos").update(payload).eq("id", id);\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to update video", true);\
+      \} else \{\
+        setStatus("Video updated");\
+        await loadVideos();\
+      \}\
+    \}\
+\
+    async function deleteVideo(id) \{\
+      if (!confirm("Delete this video row? This cannot be undone.")) return;\
+      setStatus("Deleting video...");\
+      const \{ error \} = await supabase.from("videos").delete().eq("id", id);\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to delete video", true);\
+      \} else \{\
+        setStatus("Video deleted");\
+        await loadVideos();\
+      \}\
+    \}\
+\
+    window._editVideo = editVideo;\
+    window._deleteVideo = deleteVideo;\
+\
+    // =====================================\
+    // SECTION 3 \'96 SITE IMAGES (Table 3)\
+    // =====================================\
+\
+    async function loadImages() \{\
+      const \{ data, error \} = await supabase\
+        .from("site_images")\
+        .select("*")\
+        .order("id", \{ ascending: true \});\
+\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Error loading site images", true);\
+        return;\
+      \}\
+      imagesCache = data || [];\
+      renderImages();\
+    \}\
+\
+    function renderImages() \{\
+      const tbody = document.getElementById("img-list-body");\
+      tbody.innerHTML = "";\
+      for (const img of imagesCache) \{\
+        const tr = document.createElement("tr");\
+        tr.innerHTML = `\
+          <td>$\{img.id\}</td>\
+          <td>$\{img.image_url ? `<img src="$\{img.image_url\}" class="thumb" alt="">` : ""\}</td>\
+          <td>\
+            <div>$\{img.description || ""\}</div>\
+            <div class="small">$\{img.image_url || ""\}</div>\
+          </td>\
+          <td>\
+            <button class="secondary" onclick="window._editImage($\{img.id\})">Edit</button>\
+            <button class="danger" onclick="window._deleteImage($\{img.id\})">Delete</button>\
+          </td>\
+        `;\
+        tbody.appendChild(tr);\
+      \}\
+    \}\
+\
+    async function addImage() \{\
+      const url = document.getElementById("img-url-input").value.trim();\
+      const desc = document.getElementById("img-desc-input").value.trim();\
+      if (!url) \{\
+        alert("Image URL is required");\
+        return;\
+      \}\
+      setStatus("Adding image...");\
+      const \{ error \} = await supabase.from("site_images").insert(\{\
+        image_url: url,\
+        description: toNullIfEmpty(desc),\
+      \});\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to add image", true);\
+      \} else \{\
+        document.getElementById("img-url-input").value = "";\
+        document.getElementById("img-desc-input").value = "";\
+        setStatus("Image added");\
+        await loadImages();\
+      \}\
+    \}\
+\
+    async function editImage(id) \{\
+      const img = imagesCache.find(i => i.id === id);\
+      if (!img) return;\
+      const newUrl = prompt("Image URL:", img.image_url ?? "");\
+      if (newUrl === null) return;\
+      const newDesc = prompt("Description:", img.description ?? "");\
+      if (newDesc === null) return;\
+\
+      setStatus("Updating image...");\
+      const \{ error \} = await supabase\
+        .from("site_images")\
+        .update(\{\
+          image_url: newUrl.trim(),\
+          description: toNullIfEmpty(newDesc.trim()),\
+        \})\
+        .eq("id", id);\
+\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to update image", true);\
+      \} else \{\
+        setStatus("Image updated");\
+        await loadImages();\
+      \}\
+    \}\
+\
+    async function deleteImage(id) \{\
+      if (!confirm("Delete this image row? This cannot be undone.")) return;\
+      setStatus("Deleting image...");\
+      const \{ error \} = await supabase.from("site_images").delete().eq("id", id);\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to delete image", true);\
+      \} else \{\
+        setStatus("Image deleted");\
+        await loadImages();\
+      \}\
+    \}\
+\
+    window._editImage = editImage;\
+    window._deleteImage = deleteImage;\
+\
+    // =====================================\
+    // SECTION 4 \'96 FOOTNOTES (Table 4)\
+    // =====================================\
+\
+    async function loadFootnotes() \{\
+      const \{ data, error \} = await supabase\
+        .from("footnotes")\
+        .select("*")\
+        .order("id", \{ ascending: true \});\
+\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Error loading footnotes", true);\
+        return;\
+      \}\
+      footnotesCache = data || [];\
+      renderFootnotes();\
+    \}\
+\
+    function renderFootnotes() \{\
+      const tbody = document.getElementById("foot-list-body");\
+      tbody.innerHTML = "";\
+      for (const f of footnotesCache) \{\
+        const tr = document.createElement("tr");\
+        tr.innerHTML = `\
+          <td>$\{f.id\}</td>\
+          <td>$\{f.title || ""\}</td>\
+          <td>$\{f.description || ""\}</td>\
+          <td>\
+            <button class="secondary" onclick="window._editFootnote($\{f.id\})">Edit</button>\
+            <button class="danger" onclick="window._deleteFootnote($\{f.id\})">Delete</button>\
+          </td>\
+        `;\
+        tbody.appendChild(tr);\
+      \}\
+    \}\
+\
+    async function addFootnote() \{\
+      const title = document.getElementById("foot-title-input").value.trim();\
+      const desc = document.getElementById("foot-desc-input").value.trim();\
+      if (!title) \{\
+        alert("Title is required");\
+        return;\
+      \}\
+      setStatus("Adding text...");\
+      const \{ error \} = await supabase.from("footnotes").insert(\{\
+        title,\
+        description: toNullIfEmpty(desc),\
+      \});\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to add text", true);\
+      \} else \{\
+        document.getElementById("foot-title-input").value = "";\
+        document.getElementById("foot-desc-input").value = "";\
+        setStatus("Text added");\
+        await loadFootnotes();\
+      \}\
+    \}\
+\
+    async function editFootnote(id) \{\
+      const f = footnotesCache.find(x => x.id === id);\
+      if (!f) return;\
+      const newTitle = prompt("Title:", f.title ?? "");\
+      if (newTitle === null) return;\
+      const newDesc = prompt("Description:", f.description ?? "");\
+      if (newDesc === null) return;\
+\
+      setStatus("Updating text...");\
+      const \{ error \} = await supabase\
+        .from("footnotes")\
+        .update(\{\
+          title: newTitle.trim(),\
+          description: toNullIfEmpty(newDesc.trim()),\
+        \})\
+        .eq("id", id);\
+\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to update text", true);\
+      \} else \{\
+        setStatus("Text updated");\
+        await loadFootnotes();\
+      \}\
+    \}\
+\
+    async function deleteFootnote(id) \{\
+      if (!confirm("Delete this text row? This cannot be undone.")) return;\
+      setStatus("Deleting text...");\
+      const \{ error \} = await supabase.from("footnotes").delete().eq("id", id);\
+      if (error) \{\
+        console.error(error);\
+        setStatus("Failed to delete text", true);\
+      \} else \{\
+        setStatus("Text deleted");\
+        await loadFootnotes();\
+      \}\
+    \}\
+\
+    window._editFootnote = editFootnote;\
+    window._deleteFootnote = deleteFootnote;\
+\
+    // =====================================\
+    // INITIALIZATION\
+    // =====================================\
+\
+    document.getElementById("cat-add-btn").addEventListener("click", addCategory);\
+    document.getElementById("video-add-btn").addEventListener("click", addVideo);\
+    document.getElementById("img-add-btn").addEventListener("click", addImage);\
+    document.getElementById("foot-add-btn").addEventListener("click", addFootnote);\
+\
+    async function init() \{\
+      setStatus("Loading data from Supabase...");\
+      await loadCategories();\
+      await Promise.all([loadVideos(), loadImages(), loadFootnotes()]);\
+      setStatus("Ready.");\
+    \}\
+\
+    init().catch(err => \{\
+      console.error(err);\
+      setStatus("Initialization failed", true);\
+    \});\
+  </script>\
+</body>\
+</html>\
+}
